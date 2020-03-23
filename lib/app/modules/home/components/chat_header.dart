@@ -4,13 +4,17 @@ import 'package:chat/app/modules/home/components/list_header_chat.dart';
 import 'package:chat/app/modules/resources/chat_colors.dart';
 import 'package:chat/app/modules/resources/chat_fonts.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ChatHeader extends StatelessWidget {
   final double percentage;
+  final double startAnimation;
   final double height;
 
-  const ChatHeader({Key key, @required this.percentage, @required this.height})
+  const ChatHeader(
+      {Key key,
+      @required this.startAnimation,
+      @required this.percentage,
+      @required this.height})
       : super(key: key);
 
   @override
@@ -25,7 +29,8 @@ class ChatHeader extends StatelessWidget {
       ),
       child: Stack(
         children: <Widget>[
-          ListHeaderChat(percentage: percentage),
+          ListHeaderChat(
+              percentage: percentage, startAnimation: startAnimation),
           _titleHeader(),
           _buildOptions(),
           _buildHeaderBottomWhite(context)

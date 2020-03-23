@@ -6,13 +6,19 @@ class BaseSliverForPercent extends SliverPersistentHeaderDelegate {
   final double minHeight;
   final Widget Function(double, double) update;
 
-  BaseSliverForPercent({@required this.expandedHeight, this.minHeight = kToolbarHeight, @required this.update});
+  BaseSliverForPercent({
+    @required this.expandedHeight,
+    this.minHeight = kToolbarHeight,
+    @required this.update,
+  });
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return LayoutBuilder(
       builder: (count, constraints) {
-        final double percentage = (constraints.maxHeight - minExtent) / (maxExtent - minExtent);
+        final double percentage =
+            (constraints.maxHeight - minExtent) / (maxExtent - minExtent);
         return update(percentage, maxExtent);
       },
     );

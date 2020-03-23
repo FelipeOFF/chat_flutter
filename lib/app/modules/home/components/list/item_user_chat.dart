@@ -19,7 +19,7 @@ abstract class ItemUserChat extends StatelessWidget {
         child: Container(
           height: 50,
           width: 50,
-          color: Colors.white.withAlpha(120),
+          color: Colors.white.withAlpha(100),
           child: InkWell(
             onTap: onTap,
             child: childForCenter,

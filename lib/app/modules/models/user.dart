@@ -6,6 +6,7 @@ class User {
   String name;
   String photo;
   DocumentReference user;
+
   User({
     this.name,
     this.photo,
