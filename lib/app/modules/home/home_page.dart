@@ -1,5 +1,4 @@
 import 'package:chat/app/modules/base/components/base_sliver_for_percent.dart';
-import 'package:chat/app/modules/resources/chat_colors.dart';
 import 'package:flutter/material.dart';
 
 import 'components/chat_header.dart';
@@ -18,17 +17,21 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         top: false,
         child: CustomScrollView(
+          physics: PageScrollPhysics(),
           slivers: <Widget>[
             SliverPersistentHeader(
               pinned: true,
               floating: true,
               delegate: BaseSliverForPercent(
-                expandedHeight: 260,
+                expandedHeight: 300,
                 minHeight: 100,
-                update: (double percent, double maxHeight) => ChatHeader(
-                  percentage: percent,
-                  height: maxHeight,
-                ),
+                update: (double percent, double maxHeight) {
+                  print(percent);
+                  return ChatHeader(
+                    percentage: percent,
+                    height: maxHeight,
+                  );
+                },
               ),
             ),
             SliverFillRemaining(
