@@ -16,9 +16,9 @@ class ListHeaderChat extends StatelessWidget {
     return Positioned(
       width: MediaQuery.of(context).size.width,
       top: (110.0 * percentage) + 35.0,
-      left: 200 - (200 * startAnimation),
+      left: 250 - (250 * startAnimation),
       child: Opacity(
-        opacity: startAnimation,
+        opacity: _getPercentForOpacity(),
         child: Container(
           height: 50,
           child: ListView.separated(
@@ -50,4 +50,8 @@ class ListHeaderChat extends StatelessWidget {
       ),
     );
   }
+
+  double _getPercentForOpacity() =>
+      1.0 -
+      ((1.0 - startAnimation) <= 0.5 ? (1.0 - startAnimation) / 0.5 : 1.0);
 }

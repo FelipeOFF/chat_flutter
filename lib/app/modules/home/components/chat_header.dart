@@ -40,7 +40,7 @@ class ChatHeader extends StatelessWidget {
   }
 
   Positioned _buildHeaderBottomWhite(BuildContext context) => Positioned(
-        bottom: 0,
+        bottom: -1,
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 28.0 * percentage,
@@ -56,6 +56,7 @@ class ChatHeader extends StatelessWidget {
 
   Positioned _buildOptions() => Positioned(
         top: 216 * percentage,
+        right: 250 - (250 * startAnimation),
         child: Opacity(
           opacity: _getPercentForRowOptions(),
           child: Padding(
@@ -72,8 +73,16 @@ class ChatHeader extends StatelessWidget {
         ),
       );
 
+  double _getPercentForOpacity() =>
+      startAnimation == 0.0 || startAnimation == 1.0
+          ? percentage
+          : startAnimation;
+
   double _getPercentForRowOptions() =>
-      1.0 - ((1.0 - percentage) <= 0.14 ? (1.0 - percentage) / 0.14 : 1.0);
+      1.0 -
+      ((1.0 - _getPercentForOpacity()) <= 0.14
+          ? (1.0 - _getPercentForOpacity()) / 0.14
+          : 1.0);
 
   Widget _optionButton() => Row(
         children: <Widget>[

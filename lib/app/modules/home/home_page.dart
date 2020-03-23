@@ -22,7 +22,7 @@ class _HomePageState extends ModularState<HomePage, HomeController>
   void initState() {
     super.initState();
     _controllerAnimation =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
     _animation =
         Tween<double>(begin: 0.0, end: 1.0).animate(_controllerAnimation)
           ..addListener(() {
