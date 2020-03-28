@@ -29,8 +29,13 @@ class ChatHeader extends StatelessWidget {
       ),
       child: Stack(
         children: <Widget>[
-          ListHeaderChat(
-              percentage: percentage, startAnimation: startAnimation),
+          Positioned(
+            width: MediaQuery.of(context).size.width,
+            top: (110.0 * percentage) + 35.0,
+            left: 250 - (250 * startAnimation),
+            child: ListHeaderChat(
+                percentage: percentage, startAnimation: startAnimation),
+          ),
           _titleHeader(),
           _buildOptions(),
           _buildHeaderBottomWhite(context)

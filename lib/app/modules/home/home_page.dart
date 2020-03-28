@@ -1,4 +1,6 @@
+import 'package:chat/app/modules/base/components/behavior_none.dart';
 import 'package:chat/app/modules/home/components/base_dynamic_height_sliver_for_percent.dart';
+import 'package:chat/app/modules/home/components/login_screen.dart';
 import 'package:chat/app/modules/home/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -35,44 +37,51 @@ class _HomePageState extends ModularState<HomePage, HomeController>
     return Scaffold(
       body: SafeArea(
         top: false,
-        child: CustomScrollView(
-          physics: PageScrollPhysics(),
-          slivers: <Widget>[
-            Observer(builder: (con) {
-              return SliverPersistentHeader(
-                pinned: true,
-                floating: true,
-                delegate: BaseDynamicHeightSliverForPercent(
-                  animationExpandedHeight: controller.statusAnimation,
-                  maxAnimation: 300,
-                  minAnimation: 160,
-                  minHeight: 100,
-                  update: (double percent, double maxHeight) {
-                    print(percent);
-                    return ChatHeader(
-                      percentage: percent,
-                      height: maxHeight,
-                      startAnimation: controller.statusAnimation,
+        child: ScrollConfiguration(
+          behavior: BehaviorNone(),
+          child: CustomScrollView(
+            physics: PageScrollPhysics(),
+            slivers: <Widget>[
+              Observer(builder: (con) {
+                return SliverPersistentHeader(
+                  pinned: true,
+                  floating: true,
+                  delegate: BaseDynamicHeightSliverForPercent(
+                    animationExpandedHeight: controller.statusAnimation,
+                    maxAnimation: 300,
+                    minAnimation: 160,
+                    minHeight: 100,
+                    update: (double percent, double maxHeight) {
+                      print(percent);
+                      return ChatHeader(
+                        percentage: percent,
+                        height: maxHeight,
+                        startAnimation: controller.statusAnimation,
+                      );
+                    },
+                  ),
+                );
+              }),
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Container(
+                  height: (MediaQuery.of(context).size.height - 100),
+                  child: Observer(builder: (_) {
+                    return LoginScreen(
+                      statusAnimation: controller.statusAnimation,
+                      onClickLogin: () {
+                        if (_animation.value == 1.0) {
+                          _controllerAnimation.reverse();
+                        } else {
+                          _controllerAnimation.forward();
+                        }
+                      },
                     );
-                  },
-                ),
-              );
-            }),
-            SliverFillRemaining(
-              child: Center(
-                child: RaisedButton(
-                  onPressed: () {
-                    if (_animation.value == 1.0) {
-                      _controllerAnimation.reverse();
-                    } else {
-                      _controllerAnimation.forward();
-                    }
-                  },
-                  child: Text("Teste"),
+                  }),
                 ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );

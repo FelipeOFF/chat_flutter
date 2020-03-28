@@ -1,26 +1,39 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:random_color/random_color.dart';
 
 class User {
   String name;
   String photo;
+  Color color;
   DocumentReference user;
 
   User({
     this.name,
     this.photo,
+    this.color,
     this.user,
-  });
+  }) {
+    if (this.color == null) {
+      this.color = RandomColor().randomColor(
+        colorBrightness: ColorBrightness.primary,
+        colorSaturation: ColorSaturation.highSaturation,
+      );
+    }
+  }
 
   User copyWith({
     String name,
     String photo,
+    Color color,
     DocumentReference user,
   }) {
     return User(
       name: name ?? this.name,
       photo: photo ?? this.photo,
+      color: color ?? this.color,
       user: user ?? this.user,
     );
   }
@@ -29,7 +42,7 @@ class User {
     return {
       'name': name,
       'photo': photo,
-      'user': user,
+      'color': color.value,
     };
   }
 
@@ -39,7 +52,7 @@ class User {
     return User(
       name: map['name'],
       photo: map['photo'],
-      user: map['user'],
+      color: Color(map['color']),
     );
   }
 
@@ -48,15 +61,23 @@ class User {
   static User fromJson(String source) => fromMap(json.decode(source));
 
   @override
-  String toString() => 'User(name: $name, photo: $photo, user: $user)';
+  String toString() {
+    return 'User(name: $name, photo: $photo, color: $color, user: $user)';
+  }
 
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is User && o.name == name && o.photo == photo && o.user == user;
+    return o is User &&
+        o.name == name &&
+        o.photo == photo &&
+        o.color == color &&
+        o.user == user;
   }
 
   @override
-  int get hashCode => name.hashCode ^ photo.hashCode ^ user.hashCode;
+  int get hashCode {
+    return name.hashCode ^ photo.hashCode ^ color.hashCode ^ user.hashCode;
+  }
 }
