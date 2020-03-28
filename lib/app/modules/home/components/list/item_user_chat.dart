@@ -1,10 +1,8 @@
 import 'dart:math';
 
 import 'package:chat/app/modules/models/user.dart';
-import 'package:chat/app/modules/resources/chat_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:random_color/random_color.dart';
 
 typedef OnItemUserChatClick = Function(ItemUserChat);
 
@@ -23,12 +21,16 @@ abstract class ItemUserChat extends StatelessWidget {
         height: 50,
         width: 50,
         color: Colors.white.withAlpha(100),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-            child: childForCenter,
-          ),
+        child: Stack(
+          children: <Widget>[
+            childForCenter,
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onTap,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -41,9 +43,11 @@ class ItemSearchChat extends ItemUserChat {
   ItemSearchChat({this.listener});
 
   @override
-  Widget get childForCenter => Icon(
-        Icons.search,
-        color: Colors.white,
+  Widget get childForCenter => Center(
+        child: Icon(
+          Icons.search,
+          color: Colors.white,
+        ),
       );
 
   @override
