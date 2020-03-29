@@ -10,12 +10,12 @@ class ChatHeader extends StatelessWidget {
   final double startAnimation;
   final double height;
 
-  const ChatHeader(
-      {Key key,
-      @required this.startAnimation,
-      @required this.percentage,
-      @required this.height})
-      : super(key: key);
+  const ChatHeader({
+    Key key,
+    @required this.startAnimation,
+    @required this.percentage,
+    @required this.height,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

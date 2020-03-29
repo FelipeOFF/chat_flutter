@@ -10,7 +10,8 @@ abstract class _HomeBase with Store {
   final UserRepository repository;
 
   _HomeBase(UserRepository this.repository) {
-    users = repository.getAllUsersStream();
+    users = repository.getAllUsersStream().asObservable();
+    name = "";
   }
 
   @observable
@@ -40,4 +41,8 @@ abstract class _HomeBase with Store {
 
   @action
   void onNameChanged(String value) => name = value;
+
+  // TODO show loading
+  @action
+  Future<User> addUser() => repository.saveUser(User(name: name));
 }

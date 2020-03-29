@@ -65,6 +65,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget buildTextFieldName() => TextFormField(
+        initialValue: "",
         onChanged: onTextChanged,
         keyboardType: TextInputType.text,
         textCapitalization: TextCapitalization.words,
