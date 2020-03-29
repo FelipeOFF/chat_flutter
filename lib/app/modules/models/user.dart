@@ -7,12 +7,14 @@ import 'package:random_color/random_color.dart';
 class User {
   String name;
   String photo;
+  String identifier;
   Color color;
   DocumentReference user;
 
   User({
     this.name,
     this.photo,
+    this.identifier,
     this.color,
     this.user,
   }) {
@@ -27,12 +29,14 @@ class User {
   User copyWith({
     String name,
     String photo,
+    String identifier,
     Color color,
     DocumentReference user,
   }) {
     return User(
       name: name ?? this.name,
       photo: photo ?? this.photo,
+      identifier: identifier ?? this.identifier,
       color: color ?? this.color,
       user: user ?? this.user,
     );
@@ -42,6 +46,7 @@ class User {
     return {
       'name': name,
       'photo': photo,
+      'identifier': identifier,
       'color': color.value,
     };
   }
@@ -52,6 +57,7 @@ class User {
     return User(
       name: map['name'],
       photo: map['photo'],
+      identifier: map['identifier'],
       color: Color(map['color']),
     );
   }
@@ -62,7 +68,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(name: $name, photo: $photo, color: $color, user: $user)';
+    return 'User(name: $name, photo: $photo, identifier: $identifier, color: $color, user: $user)';
   }
 
   @override
@@ -72,12 +78,17 @@ class User {
     return o is User &&
         o.name == name &&
         o.photo == photo &&
+        o.identifier == identifier &&
         o.color == color &&
         o.user == user;
   }
 
   @override
   int get hashCode {
-    return name.hashCode ^ photo.hashCode ^ color.hashCode ^ user.hashCode;
+    return name.hashCode ^
+        photo.hashCode ^
+        identifier.hashCode ^
+        color.hashCode ^
+        user.hashCode;
   }
 }

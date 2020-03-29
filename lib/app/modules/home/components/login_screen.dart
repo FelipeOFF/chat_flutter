@@ -4,11 +4,17 @@ import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen(
-      {Key key, @required this.onClickLogin, @required this.statusAnimation})
+      {Key key,
+      @required this.onClickLogin,
+      @required this.statusAnimation,
+      @required this.onTextChanged,
+      @required this.onError})
       : super(key: key);
 
   final Function() onClickLogin;
   final double statusAnimation;
+  final Function(String) onTextChanged;
+  final String Function() onError;
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +41,7 @@ class LoginScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 20.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          buildTextFieldName(),
-                        ],
+                        children: <Widget>[buildTextFieldName()],
                       ),
                     ),
                   ),
@@ -60,9 +64,12 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget buildTextFieldName() => TextField(
-        keyboardType: TextInputType.emailAddress,
+  Widget buildTextFieldName() => TextFormField(
+        onChanged: onTextChanged,
+        keyboardType: TextInputType.text,
+        textCapitalization: TextCapitalization.words,
         decoration: InputDecoration(
+            errorText: onError(),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(
                 color: ChatColors.grey_8E8D9D,
@@ -74,7 +81,10 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             labelText: 'Name',
-            labelStyle: TextStyle(color: ChatColors.blue_343264)),
+            labelStyle: TextStyle(
+              color:
+                  onError() == null ? ChatColors.blue_343264 : Colors.redAccent,
+            )),
         style: ChatFonts.poppins_grey_8E8D9D_14,
       );
 }
