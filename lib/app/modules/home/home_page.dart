@@ -1,6 +1,6 @@
 import 'package:chat/app/modules/base/components/behavior_none.dart';
 import 'package:chat/app/modules/home/components/base_dynamic_height_sliver_for_percent.dart';
-import 'package:chat/app/modules/home/components/login_screen.dart';
+import 'package:chat/app/modules/home/components/sliver_body_chat.dart';
 import 'package:chat/app/modules/home/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -65,48 +65,9 @@ class _HomePageState extends ModularState<HomePage, HomeController>
               Observer(builder: (_) {
                 return SliverFillRemaining(
                   hasScrollBody: controller.statusAnimation > 0.2,
-                  child: Container(
-                    height: (MediaQuery.of(context).size.height - 100),
-                    child: LayoutBuilder(builder: (_, constraints) {
-                      if (controller.statusAnimation > 0.2) {
-                        return Opacity(
-                          opacity: controller.statusAnimation,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: calcTranslationReverse(constraints)),
-                            child: Container(
-                              child: Center(
-                                child: RaisedButton(
-                                  onPressed: () async {
-                                    await _controllerAnimation.reverse();
-                                  },
-                                  child: Text("Reverse"),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Opacity(
-                          opacity: _getPercentForOpacity(),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: calcTranslation(constraints)),
-                            child: LoginScreen(
-                              statusAnimation: controller.statusAnimation,
-                              onError: controller.validateName,
-                              onTextChanged: controller.onNameChanged,
-                              onClickLogin: controller.isValid
-                                  ? () async {
-                                      await _controllerAnimation.forward();
-                                    }
-                                  : null,
-                            ),
-                          ),
-                        );
-                      }
-                    }),
-                  ),
+                  child: SliverBodyChat(
+                      controller: controller,
+                      controllerAnimation: _controllerAnimation),
                 );
               }),
             ],
@@ -115,19 +76,6 @@ class _HomePageState extends ModularState<HomePage, HomeController>
       ),
     );
   }
-
-  double calcTranslationReverse(BoxConstraints constraints) =>
-      ((constraints.maxHeight * 0.2) -
-          ((constraints.maxHeight * 0.2) * controller.statusAnimation));
-
-  double calcTranslation(BoxConstraints constraints) =>
-      ((constraints.maxHeight * 0.2) * controller.statusAnimation);
-
-  double _getPercentForOpacity() =>
-      1.0 -
-      (controller.statusAnimation <= 0.2
-          ? controller.statusAnimation / 0.2
-          : 1.0);
 
   @override
   void dispose() {
