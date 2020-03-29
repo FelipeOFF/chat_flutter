@@ -87,24 +87,30 @@ class _HomePageState extends ModularState<HomePage, HomeController>
                           ),
                         );
                       } else {
-                        return Opacity(
-                          opacity: _getPercentForOpacity(),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: calcTranslation(constraints)),
-                            child: LoginScreen(
-                              statusAnimation: controller.statusAnimation,
-                              onError: controller.validateName,
-                              onTextChanged: controller.onNameChanged,
-                              onClickLogin: controller.isValid
-                                  ? () async {
-                                      await controller.addUser();
-                                      await _controllerAnimation.forward();
-                                    }
-                                  : null,
+                        return Observer(builder: (_) {
+                          return Opacity(
+                            opacity: _getPercentForOpacity(),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  top: calcTranslation(constraints)),
+                              child: controller.loadingSave
+                                  ? CircularProgressIndicator()
+                                  : LoginScreen(
+                                      statusAnimation:
+                                          controller.statusAnimation,
+                                      onError: controller.validateName,
+                                      onTextChanged: controller.onNameChanged,
+                                      onClickLogin: controller.isValid
+                                          ? () async {
+                                              await controller.addUser();
+                                              await _controllerAnimation
+                                                  .forward();
+                                            }
+                                          : null,
+                                    ),
                             ),
-                          ),
-                        );
+                          );
+                        });
                       }
                     }),
                   ),

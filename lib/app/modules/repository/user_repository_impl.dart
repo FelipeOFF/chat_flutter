@@ -26,7 +26,7 @@ class UserRepositoryImpl extends UserRepository {
 
   @override
   Stream<List<User>> getAllUsersStream() =>
-      firestore.collection(userCollection).snapshots().map(
+      _getCollectionReference().orderBy("name").snapshots().map(
           (event) => event.documents.map((e) => User.fromMap(e.data)).toList());
 
   CollectionReference _getCollectionReference() =>

@@ -66,6 +66,30 @@ mixin _$HomeController on _HomeBase, Store {
     }, _$nameAtom, name: '${_$nameAtom.name}_set');
   }
 
+  final _$loadingSaveAtom = Atom(name: '_HomeBase.loadingSave');
+
+  @override
+  bool get loadingSave {
+    _$loadingSaveAtom.context.enforceReadPolicy(_$loadingSaveAtom);
+    _$loadingSaveAtom.reportObserved();
+    return super.loadingSave;
+  }
+
+  @override
+  set loadingSave(bool value) {
+    _$loadingSaveAtom.context.conditionallyRunInAction(() {
+      super.loadingSave = value;
+      _$loadingSaveAtom.reportChanged();
+    }, _$loadingSaveAtom, name: '${_$loadingSaveAtom.name}_set');
+  }
+
+  final _$addUserAsyncAction = AsyncAction('addUser');
+
+  @override
+  Future<User> addUser() {
+    return _$addUserAsyncAction.run(() => super.addUser());
+  }
+
   final _$_HomeBaseActionController = ActionController(name: '_HomeBase');
 
   @override
@@ -89,10 +113,10 @@ mixin _$HomeController on _HomeBase, Store {
   }
 
   @override
-  Future<User> addUser() {
+  void changeLoadingSave(bool value) {
     final _$actionInfo = _$_HomeBaseActionController.startAction();
     try {
-      return super.addUser();
+      return super.changeLoadingSave(value);
     } finally {
       _$_HomeBaseActionController.endAction(_$actionInfo);
     }
@@ -101,7 +125,7 @@ mixin _$HomeController on _HomeBase, Store {
   @override
   String toString() {
     final string =
-        'users: ${users.toString()},statusAnimation: ${statusAnimation.toString()},name: ${name.toString()},isValid: ${isValid.toString()}';
+        'users: ${users.toString()},statusAnimation: ${statusAnimation.toString()},name: ${name.toString()},loadingSave: ${loadingSave.toString()},isValid: ${isValid.toString()}';
     return '{$string}';
   }
 }
