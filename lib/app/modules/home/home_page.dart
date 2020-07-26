@@ -1,12 +1,15 @@
 import 'package:chat/app/modules/base/components/behavior_none.dart';
 import 'package:chat/app/modules/home/components/base_dynamic_height_sliver_for_percent.dart';
-import 'package:chat/app/modules/home/components/login_screen.dart';
+import 'package:chat/app/modules/home/components/list_client.dart';
+import 'package:chat/app/modules/home/components/login_sliver.dart';
 import 'package:chat/app/modules/home/home_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
+import '../models/user.dart';
 import 'components/chat_header.dart';
 
 class HomePage extends StatefulWidget {
@@ -38,6 +41,8 @@ class _HomePageState extends ModularState<HomePage, HomeController>
         await _controllerAnimation.forward();
       }
     }));
+
+    controller.onNameChanged("");
   }
 
   @override
@@ -71,52 +76,26 @@ class _HomePageState extends ModularState<HomePage, HomeController>
                 );
               }),
               Observer(builder: (_) {
-                return SliverFillRemaining(
-                  hasScrollBody: controller.statusAnimation > 0.2,
-                  child: Container(
-                    height: (MediaQuery.of(context).size.height - 100),
-                    child: LayoutBuilder(builder: (_, constraints) {
-                      if (controller.statusAnimation > 0.2) {
-                        return Opacity(
-                          opacity: controller.statusAnimation,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: calcTranslationReverse(constraints)),
-                            child: Container(
-                              child: Center(
-                                child: RaisedButton(
-                                  onPressed: () async {
-                                    await _controllerAnimation.reverse();
-                                  },
-                                  child: Text("Reverse"),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Observer(builder: (_) {
-                          var loadingMode = controller.loadingSave;
-                          print("Is loading mode: $loadingMode");
-                          return Opacity(
-                            opacity: _getPercentForOpacity(),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  top: calcTranslation(constraints)),
-                              child: LoginScreen(
-                                statusAnimation: controller.statusAnimation,
-                                onError: controller.validateName,
-                                onTextChanged: controller.onNameChanged,
-                                onClickLogin: _controllerIsValid(),
-                                isLoading: loadingMode,
-                              ),
-                            ),
-                          );
-                        });
-                      }
-                    }),
-                  ),
-                );
+                if (controller.statusAnimation > 0.2) {
+                  if (controller.users.data == null) {
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: Text("Data is null"),
+                      ),
+                    );
+                  } else if (!(controller.users.data is List)) {
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: Text("Data is not list"),
+                      ),
+                    );
+                  }
+
+                  var data = controller.users.data as List<User>;
+                  return ListClient(data: data);
+                }
+
+                return LoginSliver(controller: controller);
               }),
             ],
           ),
@@ -125,24 +104,9 @@ class _HomePageState extends ModularState<HomePage, HomeController>
     );
   }
 
-  Function _controllerIsValid() => controller.isValid
-      ? () async {
-          await controller.addUser();
-        }
-      : null;
-
   double calcTranslationReverse(BoxConstraints constraints) =>
       ((constraints.maxHeight * 0.2) -
           ((constraints.maxHeight * 0.2) * controller.statusAnimation));
-
-  double calcTranslation(BoxConstraints constraints) =>
-      ((constraints.maxHeight * 0.2) * controller.statusAnimation);
-
-  double _getPercentForOpacity() =>
-      1.0 -
-      (controller.statusAnimation <= 0.2
-          ? controller.statusAnimation / 0.2
-          : 1.0);
 
   @override
   void dispose() {

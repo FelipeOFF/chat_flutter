@@ -38,9 +38,8 @@ class _ListHeaderChatState
             shrinkWrap: true,
             physics: BouncingScrollPhysics(),
             itemCount: (data.length + 1),
-            padding: EdgeInsets.only(
-              left: 40.0,
-              right: 40.0,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 40,
             ),
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {

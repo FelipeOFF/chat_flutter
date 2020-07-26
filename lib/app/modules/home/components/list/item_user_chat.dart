@@ -9,12 +9,12 @@ abstract class ItemUserChat extends StatelessWidget {
 
   Widget get childForCenter;
 
-  void onTap();
+  void Function() onTap();
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(50.0)),
+      borderRadius: const BorderRadius.all(const Radius.circular(50.0)),
       child: Container(
         height: 50,
         width: 50,
@@ -25,7 +25,7 @@ abstract class ItemUserChat extends StatelessWidget {
             Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: onTap,
+                onTap: onTap(),
               ),
             ),
           ],
@@ -49,8 +49,11 @@ class ItemSearchChat extends ItemUserChat {
       );
 
   @override
-  void onTap() {
-    listener?.call(this);
+  void Function() onTap() {
+    if (this.listener != null) {
+      return () => listener(this);
+    }
+    return null;
   }
 }
 
@@ -63,27 +66,31 @@ class ItemUserIconChat extends ItemUserChat {
   @override
   Widget get childForCenter {
     return Center(
-      child: user.photo != null
-          ? Image.network(user.photo)
-          : Container(
-              color: user.color,
-              child: Center(
-                  child: Text(
-                user.name[0].toUpperCase(),
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              )),
-            ),
+      child: _checkHasUserPhoto(),
     );
   }
 
+  Widget _checkHasUserPhoto() =>
+      user.photo != null ? Image.network(user.photo) : _createCircleText();
+
+  Widget _createCircleText() => Container(
+        color: user.color,
+        child: Center(
+            child: Text(
+          user.name[0].toUpperCase(),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 20.0,
+            fontWeight: FontWeight.w500,
+          ),
+        )),
+      );
+
   @override
-  void onTap() {
-    if (listener != null) {
-      listener(this);
+  void Function() onTap() {
+    if (this.listener != null) {
+      return () => listener(this);
     }
+    return null;
   }
 }
