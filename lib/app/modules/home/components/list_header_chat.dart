@@ -1,6 +1,5 @@
 import 'package:chat/app/modules/home/components/list/item_user_chat.dart';
 import 'package:chat/app/modules/home/home_controller.dart';
-import 'package:chat/app/modules/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';

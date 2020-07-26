@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:chat/app/modules/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -52,7 +50,7 @@ class ItemSearchChat extends ItemUserChat {
 
   @override
   void onTap() {
-    listener != null ? listener(this) : null;
+    listener?.call(this);
   }
 }
 

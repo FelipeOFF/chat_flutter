@@ -7,7 +7,7 @@ class UserRepositoryImpl extends UserRepository {
   final String userCollection = "users";
   final Firestore firestore;
 
-  UserRepositoryImpl(Firestore this.firestore);
+  UserRepositoryImpl(this.firestore);
 
   @override
   Future<User> saveUser(User user) async {

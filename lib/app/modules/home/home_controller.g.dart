@@ -86,7 +86,7 @@ mixin _$HomeController on _HomeBase, Store {
   final _$addUserAsyncAction = AsyncAction('addUser');
 
   @override
-  Future<User> addUser() {
+  Future<void> addUser() {
     return _$addUserAsyncAction.run(() => super.addUser());
   }
 

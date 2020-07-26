@@ -9,7 +9,7 @@ class HomeController = _HomeBase with _$HomeController;
 abstract class _HomeBase with Store {
   final UserRepository repository;
 
-  _HomeBase(UserRepository this.repository) {
+  _HomeBase(this.repository) {
     users = repository.getAllUsersStream().asObservable();
     onNameChanged("");
   }
@@ -45,9 +45,9 @@ abstract class _HomeBase with Store {
   @action
   void changeLoadingSave(bool value) => loadingSave = value;
 
-  // TODO show loading
   @action
-  Future<User> addUser() async {
+  Future<void> addUser() async {
+    // TODO show loading
     changeLoadingSave(true);
     try {
       var result = repository.saveUser(User(name: name));
