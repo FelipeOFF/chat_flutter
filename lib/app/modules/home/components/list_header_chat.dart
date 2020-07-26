@@ -39,7 +39,7 @@ class _ListHeaderChatState
             physics: BouncingScrollPhysics(),
             itemCount: (data.length + 1),
             padding: EdgeInsets.only(
-              left: (160 - (160.0 * widget.percentage)) + 40.0,
+              left: 40.0,
               right: 40.0,
             ),
             scrollDirection: Axis.horizontal,

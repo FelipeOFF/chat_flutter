@@ -5,6 +5,7 @@ import 'package:chat/app/modules/home/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mobx/mobx.dart';
 
 import 'components/chat_header.dart';
 
@@ -19,6 +20,7 @@ class _HomePageState extends ModularState<HomePage, HomeController>
     with SingleTickerProviderStateMixin {
   Animation<double> _animation;
   AnimationController _controllerAnimation;
+  List<ReactionDisposer> _disposers = [];
 
   @override
   void initState() {
@@ -30,6 +32,12 @@ class _HomePageState extends ModularState<HomePage, HomeController>
           ..addListener(() {
             controller.setStatus(_animation.value);
           });
+
+    _disposers.add(reaction((_) => controller.success, (success) async {
+      if (success) {
+        await _controllerAnimation.forward();
+      }
+    }));
   }
 
   @override
@@ -88,26 +96,20 @@ class _HomePageState extends ModularState<HomePage, HomeController>
                         );
                       } else {
                         return Observer(builder: (_) {
+                          var loadingMode = controller.loadingSave;
+                          print("Is loading mode: $loadingMode");
                           return Opacity(
                             opacity: _getPercentForOpacity(),
                             child: Padding(
                               padding: EdgeInsets.only(
                                   top: calcTranslation(constraints)),
-                              child: controller.loadingSave
-                                  ? CircularProgressIndicator()
-                                  : LoginScreen(
-                                      statusAnimation:
-                                          controller.statusAnimation,
-                                      onError: controller.validateName,
-                                      onTextChanged: controller.onNameChanged,
-                                      onClickLogin: controller.isValid
-                                          ? () async {
-                                              await controller.addUser();
-                                              await _controllerAnimation
-                                                  .forward();
-                                            }
-                                          : null,
-                                    ),
+                              child: LoginScreen(
+                                statusAnimation: controller.statusAnimation,
+                                onError: controller.validateName,
+                                onTextChanged: controller.onNameChanged,
+                                onClickLogin: _controllerIsValid(),
+                                isLoading: loadingMode,
+                              ),
                             ),
                           );
                         });
@@ -122,6 +124,12 @@ class _HomePageState extends ModularState<HomePage, HomeController>
       ),
     );
   }
+
+  Function _controllerIsValid() => controller.isValid
+      ? () async {
+          await controller.addUser();
+        }
+      : null;
 
   double calcTranslationReverse(BoxConstraints constraints) =>
       ((constraints.maxHeight * 0.2) -
@@ -139,6 +147,7 @@ class _HomePageState extends ModularState<HomePage, HomeController>
   @override
   void dispose() {
     _controllerAnimation.dispose();
+    _disposers.forEach((dispose) => dispose());
     super.dispose();
   }
 }

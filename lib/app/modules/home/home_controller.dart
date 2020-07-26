@@ -22,6 +22,8 @@ abstract class _HomeBase with Store {
   String name;
   @observable
   bool loadingSave = false;
+  @observable
+  bool success = false;
 
   @computed
   bool get isValid {
@@ -43,20 +45,16 @@ abstract class _HomeBase with Store {
   void onNameChanged(String value) => name = value;
 
   @action
-  void changeLoadingSave(bool value) => loadingSave = value;
-
-  @action
   Future<void> addUser() async {
-    // TODO show loading
-    changeLoadingSave(true);
+    this.loadingSave = true;
     try {
-      var result = repository.saveUser(User(name: name));
-      onNameChanged("");
-      return result;
-    } on Exception {
-      print("Error in save");
+      await repository.saveUser(User(name: name));
+      success = true;
+    } catch (e) {
+      print(e);
+      success = false;
     } finally {
-      changeLoadingSave(false);
+      this.loadingSave = false;
     }
   }
 }

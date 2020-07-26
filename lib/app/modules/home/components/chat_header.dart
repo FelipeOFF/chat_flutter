@@ -29,13 +29,7 @@ class ChatHeader extends StatelessWidget {
       ),
       child: Stack(
         children: <Widget>[
-          Positioned(
-            width: MediaQuery.of(context).size.width,
-            top: (110.0 * percentage) + 35.0,
-            left: 250 - (250 * startAnimation),
-            child: ListHeaderChat(
-                percentage: percentage, startAnimation: startAnimation),
-          ),
+          _listNames(context),
           _titleHeader(),
           _buildOptions(),
           _buildHeaderBottomWhite(context)
@@ -65,7 +59,7 @@ class ChatHeader extends StatelessWidget {
         child: Opacity(
           opacity: _getPercentForRowOptions(),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 36.0),
+            padding: const EdgeInsets.symmetric(horizontal: 36.0),
             child: Row(
               children: <Widget>[
                 _optionItem(true, "Messages"),
@@ -83,10 +77,10 @@ class ChatHeader extends StatelessWidget {
           ? percentage
           : startAnimation;
 
-  double _getPercentForRowOptions() =>
+  double _getPercentForRowOptions({double base = 0.14}) =>
       1.0 -
-      ((1.0 - _getPercentForOpacity()) <= 0.14
-          ? (1.0 - _getPercentForOpacity()) / 0.14
+      ((1.0 - _getPercentForOpacity()) <= base
+          ? (1.0 - _getPercentForOpacity()) / base
           : 1.0);
 
   Widget _optionButton() => Row(
@@ -123,7 +117,8 @@ class ChatHeader extends StatelessWidget {
           child: InkWell(
             onTap: () {},
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -156,31 +151,30 @@ class ChatHeader extends StatelessWidget {
         ),
       );
 
-  Positioned _titleHeader() {
-    return Positioned(
-      top: (25.0 * percentage) + 25.0,
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(30.0),
-            bottomRight: Radius.circular(30.0)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-              sigmaX: getPercentForBlur(), sigmaY: getPercentForBlur()),
-          child: Container(
-            color:
-                ChatColors.green_135D4B.withOpacity(0.6 - (0.6 * percentage)),
-            child: Padding(
-              padding: EdgeInsets.only(left: 40.0, right: 10.0),
-              child: Text(
-                "Chat with\nfriends",
-                style: ChatFonts.poppins_24,
-              ),
-            ),
+  Positioned _titleHeader() => Positioned(
+        top: (25.0 * percentage) + 25.0,
+        left: -160 * (1.0 - _getPercentForRowOptions(base: 0.60)),
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 40.0,
+            right: 10.0,
+          ),
+          child: Text(
+            "Chat with\nfriends",
+            style: ChatFonts.poppins_24,
           ),
         ),
-      ),
-    );
-  }
+      );
 
-  double getPercentForBlur() => 5.0 - (5.0 * percentage);
+  double _marginTop() => (110.0 * percentage) + 35.0;
+
+  double _marginLeftAll() => 250 - (250 * startAnimation);
+
+  Widget _listNames(BuildContext context) => Positioned(
+        width: MediaQuery.of(context).size.width,
+        top: _marginTop(),
+        left: _marginLeftAll(),
+        child: ListHeaderChat(
+            percentage: percentage, startAnimation: startAnimation),
+      );
 }

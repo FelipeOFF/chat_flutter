@@ -83,6 +83,23 @@ mixin _$HomeController on _HomeBase, Store {
     }, _$loadingSaveAtom, name: '${_$loadingSaveAtom.name}_set');
   }
 
+  final _$successAtom = Atom(name: '_HomeBase.success');
+
+  @override
+  bool get success {
+    _$successAtom.context.enforceReadPolicy(_$successAtom);
+    _$successAtom.reportObserved();
+    return super.success;
+  }
+
+  @override
+  set success(bool value) {
+    _$successAtom.context.conditionallyRunInAction(() {
+      super.success = value;
+      _$successAtom.reportChanged();
+    }, _$successAtom, name: '${_$successAtom.name}_set');
+  }
+
   final _$addUserAsyncAction = AsyncAction('addUser');
 
   @override
@@ -113,19 +130,9 @@ mixin _$HomeController on _HomeBase, Store {
   }
 
   @override
-  void changeLoadingSave(bool value) {
-    final _$actionInfo = _$_HomeBaseActionController.startAction();
-    try {
-      return super.changeLoadingSave(value);
-    } finally {
-      _$_HomeBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     final string =
-        'users: ${users.toString()},statusAnimation: ${statusAnimation.toString()},name: ${name.toString()},loadingSave: ${loadingSave.toString()},isValid: ${isValid.toString()}';
+        'users: ${users.toString()},statusAnimation: ${statusAnimation.toString()},name: ${name.toString()},loadingSave: ${loadingSave.toString()},success: ${success.toString()},isValid: ${isValid.toString()}';
     return '{$string}';
   }
 }
